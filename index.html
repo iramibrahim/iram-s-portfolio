@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="VEYLO is a modern creator-focused video production studio specializing in short-form content, motion graphics, and visual storytelling for creators and brands." />
+  <meta name="keywords" content="VEYLO, video production, creator content, reels editor, TikTok editor, YouTube Shorts editor, motion graphics, visual storytelling" />
+  <meta name="author" content="VEYLO" />
+  <meta property="og:title" content="VEYLO — Video Production for Modern Creators" />
+  <meta property="og:description" content="Modern video production built for creators, personal brands, and businesses looking to stand out online." />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#0a0c10" />
+  <title>VEYLO — Video Production for Modern Creators</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: '#0a0c10',
+            panel: '#11131a',
+            line: 'rgba(255,255,255,.10)',
+            steel: '#a8b2c1',
+            cloud: '#f0f2f8',
+            primary: '#25E6FF',
+            secondary: '#4D7CFF',
+            accent: '#7C5CFF',
+            signal: '#25E6FF'
+          },
+          fontFamily: {
+            sans: ['Inter', 'ui-sans-serif', 'system-ui', 'Segoe UI', 'Arial', 'sans-serif']
+          },
+          boxShadow: {
+            glow: '0 0 0 1px rgba(37,230,255,.1), 0 24px 80px rgba(0,0,0,.5)',
+            'glow-sm': '0 0 12px rgba(37,230,255,.15)',
+            'glow-btn': '0 4px 20px rgba(37,230,255,.35)'
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #25E6FF;
+      --secondary: #4D7CFF;
+      --accent: #7C5CFF;
+      --ink: #0a0c10;
+      --panel: #11131a;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--ink);
+      color: #f0f2f8;
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+    }
+
+    /* Ambient mesh gradient background */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 10%, rgba(37, 230, 255, .08), transparent),
+        radial-gradient(ellipse 60% 40% at 75% 20%, rgba(77, 124, 255, .07), transparent),
+        radial-gradient(ellipse 50% 60% at 50% 80%, rgba(124, 92, 255, .05), transparent),
+        radial-gradient(ellipse 90% 60% at 60% 50%, rgba(37, 230, 255, .03), transparent);
+    }
+
+    body > * { position: relative; z-index: 1; }
+
+    ::selection { background: rgba(37, 230, 255, .3); color: #fff; }
+
+    .noise::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 50;
+      opacity: .03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* Glass card */
+    .glass {
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.025));
+      border: 1px solid rgba(255,255,255,.09);
+      box-shadow: 0 24px 80px rgba(0,0,0,.4), 0 0 1px rgba(37,230,255,.1);
+    }
+
+    /* Video card */
+    .video-card {
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border: 1px solid rgba(255,255,255,.09);
+      box-shadow: 0 18px 60px rgba(0,0,0,.3);
+      transition: transform .32s cubic-bezier(.4,0,.2,1), border-color .32s ease, box-shadow .32s ease;
+    }
+    .video-card video { filter: saturate(.96) contrast(1.06); }
+    .video-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(37, 230, 255, .3);
+      box-shadow: 0 28px 90px rgba(0,0,0,.45), 0 0 20px rgba(37, 230, 255, .08);
+    }
+    .video-card:hover .video-overlay { opacity: .2; }
+
+    /* Reveal animations */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .8s cubic-bezier(.4,0,.2,1), transform .8s cubic-bezier(.4,0,.2,1);
+    }
+    .reveal.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal[data-anim="slide-left"] {
+      transform: translateX(-50px);
+      opacity: 0;
+    }
+    .reveal[data-anim="slide-right"] {
+      transform: translateX(50px);
+      opacity: 0;
+    }
+    .reveal[data-anim="fade-left"] {
+      transform: translateX(-20px);
+      opacity: 0;
+    }
+    .reveal[data-anim="fade-right"] {
+      transform: translateX(20px);
+      opacity: 0;
+    }
+    .reveal.show[data-anim] {
+      transform: none;
+      opacity: 1;
+    }
+
+    /* Magnetic hover */
+    .magnetic {
+      transition: transform .3s cubic-bezier(.4,0,.2,1), border-color .3s ease, background .3s ease, box-shadow .3s ease;
+    }
+    .magnetic:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(37, 230, 255, .12);
+    }
+
+    /* Premium buttons */
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #0a0c10;
+      font-weight: 800;
+      border: none;
+      position: relative;
+      overflow: hidden;
+      transition: transform .3s cubic-bezier(.4,0,.2,1), box-shadow .3s ease;
+    }
+    .btn-primary::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,.2), transparent);
+      opacity: 0;
+      transition: opacity .3s ease;
+    }
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(37, 230, 255, .4), 0 0 60px rgba(37, 230, 255, .1);
+    }
+    .btn-primary:hover::before { opacity: 1; }
+
+    .btn-outline {
+      border: 1px solid rgba(255,255,255,.15);
+      color: #f0f2f8;
+      transition: transform .3s cubic-bezier(.4,0,.2,1), border-color .3s ease, background .3s ease, box-shadow .3s ease;
+    }
+    .btn-outline:hover {
+      transform: translateY(-3px);
+      border-color: rgba(37, 230, 255, .5);
+      background: rgba(37, 230, 255, .08);
+      box-shadow: 0 4px 20px rgba(37, 230, 255, .15);
+    }
+
+    /* Logo */
+    .logo-mark {
+      font-weight: 800;
+      letter-spacing: .18em;
+      font-size: .875rem;
+      text-transform: uppercase;
+      color: #f0f2f8;
+    }
+    .logo-mark span {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Mobile menu */
+    .mobile-menu {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height .28s ease, opacity .22s ease;
+    }
+    .mobile-menu.open {
+      max-height: 18rem;
+      opacity: 1;
+    }
+
+    /* Section ambient glow */
+    .section-glow {
+      position: relative;
+    }
+    .section-glow::before {
+      content: "";
+      position: absolute;
+      top: -20%;
+      left: 10%;
+      width: 80%;
+      height: 60%;
+      background: radial-gradient(ellipse, rgba(37,230,255,.04), transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Credential images */
+    .cred-img {
+      border-radius: 1rem;
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: 0 12px 40px rgba(0,0,0,.3);
+    }
+
+    /* Hero gradient line */
+    .hero-line {
+      background: linear-gradient(90deg, transparent, var(--primary), var(--secondary), transparent);
+      opacity: .3;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .reveal, .magnetic, .mobile-menu, .btn-primary, .btn-outline, .video-card { transition: none; }
+    }
+  </style>
+</head>
+<body class="noise overflow-x-hidden">
+  <header class="fixed inset-x-0 top-0 z-40 border-b border-white/8 bg-ink/80 backdrop-blur-2xl">
+    <nav class="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8" aria-label="Main navigation">
+      <a href="#top" class="logo-mark">VEY<span>LO</span></a>
+      <div class="hidden items-center gap-7 text-sm font-medium text-steel md:flex">
+        <a class="hover:text-primary transition-colors duration-200" href="#work">Work</a>
+        <a class="hover:text-primary transition-colors duration-200" href="#services">Services</a>
+        <a class="hover:text-primary transition-colors duration-200" href="#pricing">Pricing</a>
+        <a class="hover:text-primary transition-colors duration-200" href="#approach">Approach</a>
+        <a class="hover:text-primary transition-colors duration-200" href="#credentials">Credentials</a>
+        <a class="hover:text-primary transition-colors duration-200" href="#contact">Contact</a>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="#contact" class="hidden btn-outline rounded-full px-4 py-2 text-sm font-semibold sm:inline-flex">Book a Project</a>
+        <button id="menu-toggle" class="rounded-full border border-white/15 px-4 py-2 text-sm font-bold text-cloud md:hidden" type="button" aria-expanded="false" aria-controls="mobile-menu">Menu</button>
+      </div>
+    </nav>
+    <div id="mobile-menu" class="mobile-menu border-t border-white/8 bg-ink/95 md:hidden">
+      <div class="mx-auto grid max-w-7xl gap-1 px-5 py-4 text-sm font-semibold text-steel">
+        <a class="rounded-xl px-3 py-3 hover:bg-white/5 hover:text-cloud" href="#work">Work</a>
+        <a class="rounded-xl px-3 py-3 hover:bg-white/5 hover:text-cloud" href="#services">Services</a>
+        <a class="rounded-xl px-3 py-3 hover:bg-white/5 hover:text-cloud" href="#pricing">Pricing</a>
+        <a class="rounded-xl px-3 py-3 hover:bg-white/5 hover:text-cloud" href="#approach">Approach</a>
+        <a class="rounded-xl px-3 py-3 hover:bg-white/5 hover:text-cloud" href="#credentials">Credentials</a>
+        <a class="rounded-xl px-3 py-3 hover:bg-white/5 hover:text-cloud" href="#contact">Contact</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="relative min-h-screen overflow-hidden px-5 pt-28 lg:px-8">
+      <div class="hero-line absolute inset-x-0 top-20 mx-auto h-px max-w-7xl"></div>
+      <div class="mx-auto grid min-h-[calc(100vh-7rem)] max-w-7xl items-center gap-12 py-16 lg:grid-cols-[1.05fr_.95fr]">
+        <div class="reveal">
+          <p class="mb-6 inline-flex rounded-full border border-primary/20 bg-primary/5 px-4 py-2 text-xs font-semibold uppercase tracking-[.24em] text-primary">VEYLO / creator-focused video production</p>
+          <h1 class="max-w-5xl text-5xl font-extrabold leading-[.98] tracking-tight text-cloud sm:text-7xl sm:leading-[.94] lg:text-8xl lg:leading-[.9]">Video Production for Creators &amp; Brands</h1>
+          <p class="mt-7 max-w-2xl text-lg leading-8 text-steel sm:text-xl sm:leading-9">Modern video production built for creators, personal brands, and businesses looking to stand out online through strong storytelling, motion, and visual identity.</p>
+          <div class="mt-10 flex flex-col gap-3 sm:flex-row">
+            <a href="#work" class="btn-primary rounded-full px-7 py-3.5 text-center text-sm font-extrabold">View Work</a>
+            <a href="#contact" class="btn-outline rounded-full px-6 py-3.5 text-center text-sm font-bold">Get in Touch</a>
+          </div>
+          <dl class="mt-14 grid max-w-xl grid-cols-2 gap-4 text-sm">
+            <div class="border-l-2 border-primary/30 pl-4">
+              <dt class="text-lg font-bold text-cloud sm:text-xl">Creator-First</dt>
+              <dd class="mt-1.5 text-steel">Modern video production</dd>
+            </div>
+            <div class="border-l-2 border-secondary/30 pl-4">
+              <dt class="text-lg font-bold text-cloud sm:text-xl">Multi-Platform</dt>
+              <dd class="mt-1.5 text-steel">Vertical + horizontal delivery</dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="reveal relative">
+          <div class="glass relative overflow-hidden rounded-[2rem] p-3">
+            <div class="aspect-[9/16] overflow-hidden rounded-[1.45rem] bg-panel">
+              <video class="h-full w-full object-cover bg-black" muted loop playsinline autoplay preload="metadata">
+                <source src="videos/talking-head/dopamine.mp4" type="video/mp4" />
+              </video>
+              <div class="pointer-events-none absolute inset-3 rounded-[1.45rem] bg-gradient-to-t from-ink via-transparent to-transparent"></div>
+              <div class="absolute bottom-7 left-7 right-7">
+                <p class="text-xs font-bold uppercase tracking-[.22em] text-primary">Featured reel</p>
+                <p class="mt-2 text-2xl font-bold text-cloud">Hook. Pace. Captions. Sound.</p>
+              </div>
+            </div>
+          </div>
+          <div class="absolute -bottom-6 -left-6 hidden rounded-2xl border border-white/8 bg-ink/90 p-5 shadow-glow backdrop-blur-xl sm:block">
+            <p class="text-sm text-steel">Built for</p>
+            <p class="mt-1 text-xl font-bold text-cloud">TikTok / Reels / Shorts</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="section-glow px-5 py-24 lg:px-8">
+      <div class="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[.8fr_1.2fr]">
+        <div class="reveal">
+          <p class="text-sm font-bold uppercase tracking-[.22em] text-primary">About</p>
+          <h2 class="mt-4 text-4xl font-bold tracking-tight text-cloud sm:text-5xl">Production that feels sharp, intentional, and client-ready.</h2>
+        </div>
+        <div class="reveal text-lg leading-9 text-steel">
+          <p>VEYLO is a creator-focused video production studio for creators who need sharper content without the corporate agency feel. The work centers on pacing, clarity, captions, motion graphics, sound design, and edits that feel native to the platform.</p>
+          <p class="mt-6">Whether the project is an educational clip, infographic breakdown, gaming highlight, or creator-style story, every edit is shaped around one goal: make the message clearer, the rhythm tighter, and the content easier to finish watching.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CREDENTIALS -->
+    <section id="credentials" class="section-glow px-5 py-24 lg:px-8">
+      <div class="mx-auto max-w-5xl">
+        <!-- Header -->
+        <div class="reveal max-w-3xl text-center mx-auto">
+          <p class="text-sm font-bold uppercase tracking-[.22em] text-primary">Credentials</p>
+          <h2 class="mt-4 text-5xl font-bold tracking-tight text-cloud">Founder / Chief Editor</h2>
+          <p class="mt-5 max-w-2xl mx-auto text-lg leading-8 text-steel">A creative foundation built through professional editing training and visual storytelling practice.</p>
+          <p class="mt-3 text-steel"><strong>Iram Ibrahim</strong><br/>Chief Editor / Founder</p>
+        </div>
+
+        <!-- Timeline -->
+        <div class="timeline mt-20">
+          <!-- Block 1 -->
+          <div class="timeline-item flex flex-col lg:flex-row items-center mb-32">
+            <div class="w-full lg:w-1/2 p-4 reveal" data-anim="slide-left">
+              <img src="assets/img/cred2.png" alt="Professional Video Editing Journey" class="cred-img w-full" />
+            </div>
+            <div class="w-full lg:w-1/2 p-4 reveal flex flex-col justify-center space-y-4" data-anim="fade-right">
+              <h3 class="text-3xl font-bold text-cloud">Professional Video Editing Journey</h3>
+              <p class="text-lg text-steel leading-7">Started the journey of professional video editing through Creative IT Institute, one of South Asia's largest IT training institutes, focusing on modern editing workflows, storytelling, pacing, and creator‑focused content production.</p>
+            </div>
+          </div>
+          <!-- Block 2 -->
+          <div class="timeline-item flex flex-col lg:flex-row-reverse items-center mb-32">
+            <div class="w-full lg:w-1/2 p-4 reveal" data-anim="slide-right">
+              <img src="assets/img/cred1.png" alt="Visual Storytelling Certification" class="cred-img w-full" />
+            </div>
+            <div class="w-full lg:w-1/2 p-4 reveal flex flex-col justify-center space-y-4" data-anim="fade-left">
+              <h3 class="text-3xl font-bold text-cloud">Visual Storytelling Certification</h3>
+              <p class="text-lg text-steel leading-7">Achieved certification in Photo &amp; Video Editing, Basic Photography, Videography, and Smartphone Filmmaking through Intra Sessions organized by the DRMC Film &amp; Photography Club in collaboration with the University of Liberal Arts Bangladesh (ULAB).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PORTFOLIO -->
+    <section id="work" class="section-glow px-5 py-24 lg:px-8">
+      <div class="mx-auto max-w-7xl">
+        <div class="reveal flex flex-col justify-between gap-6 md:flex-row md:items-end">
+          <div>
+            <p class="text-sm font-bold uppercase tracking-[.22em] text-primary">Portfolio</p>
+            <h2 class="mt-4 text-4xl font-bold tracking-tight text-cloud sm:text-5xl">Selected video edits</h2>
+          </div>
+          <p class="max-w-xl text-steel">A focused showcase of creator edits built around pacing, clarity, motion, and audience retention.</p>
+        </div>
+
+        <div class="mt-14 space-y-7">
+          <div class="grid items-start gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <article class="video-card reveal overflow-hidden rounded-3xl">
+              <div class="relative aspect-[9/16] overflow-hidden bg-panel">
+                <video class="h-full w-full object-cover bg-black" controls playsinline preload="metadata" data-preview-time="15.65">
+                  <source src="videos/talking-head/dopamine.mp4" type="video/mp4" />
+                </video>
+                <div class="video-overlay pointer-events-none absolute inset-0 bg-gradient-to-t from-ink via-ink/15 to-transparent transition-opacity duration-300"></div>
+              </div>
+              <div class="p-6">
+                <p class="mb-3 text-xs font-bold uppercase tracking-[.18em] text-primary">Educational &amp; Infographic Content</p>
+                <h3 class="text-2xl font-bold text-cloud">Dopamine</h3>
+                <p class="mt-3 text-steel">Retention-focused educational edit with creator-style pacing, motion graphics, and visual storytelling.</p>
+              </div>
+            </article>
+
+            <article class="video-card reveal overflow-hidden rounded-3xl">
+              <div class="relative aspect-[9/16] overflow-hidden bg-panel">
+                <video class="h-full w-full object-contain bg-black" controls playsinline preload="metadata" data-preview-time="11">
+                  <source src="videos/talking-head/sequence-01-1.mp4" type="video/mp4" />
+                </video>
+                <div class="video-overlay pointer-events-none absolute inset-0 bg-gradient-to-t from-ink via-ink/15 to-transparent transition-opacity duration-300"></div>
+              </div>
+              <div class="p-6">
+                <p class="mb-3 text-xs font-bold uppercase tracking-[.18em] text-primary">Educational &amp; Infographic Content</p>
+                <h3 class="text-2xl font-bold text-cloud">Sequence 01</h3>
+                <p class="mt-3 text-steel">Clean talking-head pacing with captions, jump cuts, visual emphasis, and platform-native editing.</p>
+              </div>
+            </article>
+
+            <article class="video-card reveal overflow-hidden rounded-3xl">
+              <div class="relative aspect-[9/16] overflow-hidden bg-panel">
+                <video class="h-full w-full object-contain bg-black" controls playsinline preload="metadata" data-preview-time="11.55">
+                  <source src="videos/trend-reels/the-one-decision.mp4" type="video/mp4" />
+                </video>
+                <div class="video-overlay pointer-events-none absolute inset-0 bg-gradient-to-t from-ink via-ink/15 to-transparent transition-opacity duration-300"></div>
+              </div>
+              <div class="p-6">
+                <p class="mb-3 text-xs font-bold uppercase tracking-[.18em] text-primary">Entertainment Reel</p>
+                <h3 class="text-2xl font-bold text-cloud">"The One Decision" Trailer</h3>
+                <p class="mt-3 text-steel">Fast-paced trailer edit with expressive captions, visual rhythm, and trend-aware storytelling.</p>
+              </div>
+            </article>
+          </div>
+
+          <div class="grid items-start gap-6 md:grid-cols-2">
+            <article class="video-card reveal overflow-hidden rounded-3xl">
+              <div class="relative aspect-video overflow-hidden bg-panel">
+                <video class="h-full w-full object-contain bg-black" controls playsinline preload="metadata" poster="thumbnails/gaming-edits.jpg">
+                  <source src="videos/gaming/snapsave-1211103397231102-1080p.mp4" type="video/mp4" />
+                </video>
+                <div class="video-overlay pointer-events-none absolute inset-0 bg-gradient-to-t from-ink via-ink/15 to-transparent transition-opacity duration-300"></div>
+              </div>
+              <div class="p-6">
+                <p class="mb-3 text-xs font-bold uppercase tracking-[.18em] text-primary">Gaming Montage</p>
+                <h3 class="text-2xl font-bold text-cloud">Cinematic Valorant Montage</h3>
+                <p class="mt-3 text-steel">High-energy gaming montage with cinematic pacing, beat sync, motion effects, and retention-focused editing built around competitive gameplay moments.</p>
+              </div>
+            </article>
+
+            <article class="video-card reveal overflow-hidden rounded-3xl">
+              <div class="relative aspect-video overflow-hidden bg-panel">
+                <video class="h-full w-full object-contain bg-black" controls playsinline preload="metadata" data-preview-time="27.65">
+                  <source src="videos/gaming/comp-1.mp4" type="video/mp4" />
+                </video>
+                <div class="video-overlay pointer-events-none absolute inset-0 bg-gradient-to-t from-ink via-ink/15 to-transparent transition-opacity duration-300"></div>
+              </div>
+              <div class="p-6">
+                <p class="mb-3 text-xs font-bold uppercase tracking-[.18em] text-primary">Gaming Montage</p>
+                <h3 class="text-2xl font-bold text-cloud">Competitive Highlight Edit</h3>
+                <p class="mt-3 text-steel">A fast-paced gaming montage built around cinematic timing, motion effects, and high-impact gameplay moments.</p>
+              </div>
+            </article>
+          </div>
+
+          <div class="mt-6 max-w-2xl">
+            <article class="video-card reveal overflow-hidden rounded-3xl">
+              <div class="relative aspect-video overflow-hidden bg-panel">
+                <video class="h-full w-full object-contain bg-black" controls playsinline preload="metadata" data-preview-time="172">
+                  <source src="videos/trend-reels/the-one-decision-shortfilm.mp4" type="video/mp4" />
+                </video>
+                <div class="video-overlay pointer-events-none absolute inset-0 bg-gradient-to-t from-ink via-ink/15 to-transparent transition-opacity duration-300"></div>
+              </div>
+              <div class="p-6">
+                <p class="mb-3 text-xs font-bold uppercase tracking-[.18em] text-primary">Storytelling / Short Film</p>
+                <h3 class="text-2xl font-bold text-cloud">"The One Decision" Short Film</h3>
+                <p class="mt-3 text-steel">A horizontal short film edit built with story pacing, scene rhythm, and polished finishing.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services" class="section-glow px-5 py-24 lg:px-8">
+      <div class="mx-auto max-w-7xl">
+        <div class="reveal max-w-3xl">
+          <p class="text-sm font-bold uppercase tracking-[.22em] text-primary">Services</p>
+          <h2 class="mt-4 text-4xl font-bold tracking-tight text-cloud sm:text-5xl">Content Production Services</h2>
+          <p class="mt-5 max-w-2xl text-lg leading-8 text-steel">Professional video production and editing designed for creators, personal brands, and modern businesses.</p>
+        </div>
+        <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div class="reveal magnetic rounded-2xl border border-white/8 bg-white/[.03] p-6 hover:border-primary/30">
+            <h3 class="font-bold text-cloud">Content Editing</h3>
+            <p class="mt-3 text-sm leading-6 text-steel">Strategic editing focused on pacing, storytelling, viewer experience, and platform performance.</p>
+          </div>
+          <div class="reveal magnetic rounded-2xl border border-white/8 bg-white/[.03] p-6 hover:border-primary/30">
+            <h3 class="font-bold text-cloud">Motion Graphics</h3>
+            <p class="mt-3 text-sm leading-6 text-steel">Text animation, callouts, icons, visual emphasis, and branded motion design.</p>
+          </div>
+          <div class="reveal magnetic rounded-2xl border border-white/8 bg-white/[.03] p-6 hover:border-primary/30">
+            <h3 class="font-bold text-cloud">Captions & Subtitles</h3>
+            <p class="mt-3 text-sm leading-6 text-steel">Clean, readable captions optimized for mobile viewing and audience retention.</p>
+          </div>
+          <div class="reveal magnetic rounded-2xl border border-white/8 bg-white/[.03] p-6 hover:border-primary/30">
+            <h3 class="font-bold text-cloud">Color & Visual Polish</h3>
+            <p class="mt-3 text-sm leading-6 text-steel">Professional color correction, contrast balancing, and visual consistency across content.</p>
+          </div>
+          <div class="reveal magnetic rounded-2xl border border-white/8 bg-white/[.03] p-6 hover:border-primary/30">
+            <h3 class="font-bold text-cloud">Multi-Platform Delivery</h3>
+            <p class="mt-3 text-sm leading-6 text-steel">Content optimized for Reels, Shorts, YouTube, Facebook, and modern digital platforms.</p>
+          </div>
+          <div class="reveal magnetic rounded-2xl border border-white/8 bg-white/[.03] p-6 hover:border-primary/30">
+            <h3 class="font-bold text-cloud">Content Repurposing</h3>
+            <p class="mt-3 text-sm leading-6 text-steel">Transform long-form videos into multiple short-form content pieces for wider distribution.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING -->
+    <section id="pricing" class="section-glow px-5 py-24 lg:px-8">
+      <div class="mx-auto max-w-7xl">
+        <div class="reveal text-center">
+          <p class="text-sm font-bold uppercase tracking-[.22em] text-primary">Pricing</p>
+          <h2 class="mt-4 text-4xl font-bold tracking-tight text-cloud sm:text-5xl">Production built around your content volume.</h2>
+          <p class="mx-auto mt-5 max-w-2xl text-steel">Choose a starting package, then adjust based on complexity, pace, and turnaround.</p>
+        </div>
+        <div class="mt-12 grid gap-6 lg:grid-cols-3">
+          <article class="reveal magnetic rounded-3xl border border-white/8 bg-white/[.03] p-7 hover:border-primary/20">
+            <h3 class="text-2xl font-bold text-cloud">STARTER</h3>
+            <p class="mt-7 text-3xl font-extrabold text-cloud">&#2547;3,000 &ndash; &#2547;5,000</p>
+            <ul class="mt-7 space-y-3 text-sm text-steel">
+              <li>2&ndash;3 short-form edits</li><li>Clean captions and cuts</li><li>Basic sound design</li><li>1 revision round</li>
+            </ul>
+          </article>
+          <article class="reveal magnetic rounded-3xl border border-primary/40 bg-primary/[.06] p-7 shadow-glow">
+            <p class="mb-4 inline-flex rounded-full bg-gradient-to-r from-primary to-secondary px-3 py-1 text-xs font-bold uppercase tracking-[.18em] text-ink">Popular</p>
+            <h3 class="text-2xl font-bold text-cloud">GROWTH</h3>
+            <p class="mt-7 text-3xl font-extrabold text-cloud">&#2547;8,000 &ndash; &#2547;15,000</p>
+            <ul class="mt-7 space-y-3 text-sm text-steel">
+              <li>6&ndash;8 short-form edits</li><li>Advanced captions and pacing</li><li>Motion graphics and B-roll</li><li>Retention-focused editing</li><li>2 revision rounds</li>
+            </ul>
+          </article>
+          <article class="reveal magnetic rounded-3xl border border-white/8 bg-white/[.03] p-7 hover:border-primary/20">
+            <h3 class="text-2xl font-bold text-cloud">MONTHLY CREATOR SUPPORT</h3>
+            <p class="mt-7 text-3xl font-extrabold text-cloud">&#2547;20,000 &ndash; &#2547;40,000</p>
+            <ul class="mt-7 space-y-3 text-sm text-steel">
+              <li>12&ndash;20 edited contents</li><li>Priority delivery</li><li>Consistent visual style</li><li>Advanced motion &amp; pacing</li><li>Long-term creator support</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- APPROACH -->
+    <section id="approach" class="section-glow px-5 py-24 lg:px-8">
+      <div class="mx-auto max-w-7xl">
+        <div class="reveal flex flex-col justify-between gap-6 md:flex-row md:items-end">
+          <div>
+            <p class="text-sm font-bold uppercase tracking-[.22em] text-primary">Our Approach</p>
+            <h2 class="mt-4 text-4xl font-bold tracking-tight text-cloud sm:text-5xl">Built around attention, clarity, and flow.</h2>
+          </div>
+          <p class="max-w-xl text-steel">Every edit is shaped to feel native to modern platforms while keeping the story easy to follow and hard to skip.</p>
+        </div>
+        <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <article class="reveal magnetic rounded-2xl border border-white/8 bg-white/[.03] p-6 hover:border-primary/30">
+            <p class="mb-5 text-xs font-bold uppercase tracking-[.18em] text-primary">01</p>
+            <h3 class="text-xl font-bold text-cloud">Retention-Focused Pacing</h3>
+            <p class="mt-4 text-sm leading-6 text-steel">Edits designed to keep viewers engaged from the first second to the final frame.</p>
+          </article>
+          <article class="reveal magnetic rounded-2xl border border-white/8 bg-white/[.03] p-6 hover:border-secondary/30">
+            <p class="mb-5 text-xs font-bold uppercase tracking-[.18em] text-secondary">02</p>
+            <h3 class="text-xl font-bold text-cloud">Platform-Native Storytelling</h3>
+            <p class="mt-4 text-sm leading-6 text-steel">Content structured specifically for modern social media platforms and audience behavior.</p>
+          </article>
+          <article class="reveal magnetic rounded-2xl border border-white/8 bg-white/[.03] p-6 hover:border-accent/30">
+            <p class="mb-5 text-xs font-bold uppercase tracking-[.18em] text-accent">03</p>
+            <h3 class="text-xl font-bold text-cloud">Motion-Driven Visual Flow</h3>
+            <p class="mt-4 text-sm leading-6 text-steel">Dynamic motion graphics, captions, and visual emphasis built for digital content.</p>
+          </article>
+          <article class="reveal magnetic rounded-2xl border border-white/8 bg-white/[.03] p-6 hover:border-primary/30">
+            <p class="mb-5 text-xs font-bold uppercase tracking-[.18em] text-primary">04</p>
+            <h3 class="text-xl font-bold text-cloud">Creator-Focused Production</h3>
+            <p class="mt-4 text-sm leading-6 text-steel">Production styles tailored for creators, personal brands, gaming content, and educational media.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="px-5 py-24 lg:px-8">
+      <div class="mx-auto grid max-w-7xl gap-10 rounded-[2rem] border border-white/8 bg-white/[.03] p-8 md:p-12 lg:grid-cols-[1fr_.9fr]">
+        <div class="reveal">
+          <p class="text-sm font-bold uppercase tracking-[.22em] text-primary">Contact</p>
+          <h2 class="mt-4 text-4xl font-bold tracking-tight text-cloud sm:text-5xl">Let&rsquo;s Build Better Content</h2>
+          <p class="mt-5 max-w-2xl text-lg leading-8 text-steel">Send your footage, references, and goals &mdash; we&rsquo;ll help turn it into content designed for modern audiences.</p>
+        </div>
+        <div class="reveal grid content-center gap-3">
+          <a class="magnetic rounded-2xl border border-white/8 bg-ink/60 p-5 font-bold text-cloud hover:border-primary/50" href="https://www.instagram.com/veylo.bd/" target="_blank" rel="noopener">instagram: veylo.bd</a>
+          <a class="magnetic rounded-2xl border border-white/8 bg-ink/60 p-5 font-bold text-cloud hover:border-primary/50" href="mailto:officiallyveylo@gmail.com">gmail: officiallyveylo@gmail.com</a>
+          <a class="magnetic rounded-2xl border border-white/8 bg-ink/60 p-5 font-bold text-cloud hover:border-primary/50" href="https://wa.me/8801316196390" target="_blank" rel="noopener">whatsapp: +880 1316196390</a>
+          <a class="magnetic rounded-2xl border border-white/8 bg-ink/60 p-5 font-bold text-cloud hover:border-primary/50" href="https://www.facebook.com/profile.php?id=61590659606093" target="_blank" rel="noopener">facebook: veylo</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-white/8 px-5 py-8 text-center lg:px-8">
+    <div class="mx-auto max-w-7xl text-sm text-steel">
+      <p>VEYLO &copy; 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    const menuToggle = document.getElementById('menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    if (menuToggle && mobileMenu) {
+      menuToggle.addEventListener('click', () => {
+        const isOpen = mobileMenu.classList.toggle('open');
+        menuToggle.setAttribute('aria-expanded', String(isOpen));
+      });
+
+      mobileMenu.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => {
+          mobileMenu.classList.remove('open');
+          menuToggle.setAttribute('aria-expanded', 'false');
+        });
+      });
+    }
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add('show');
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
+
+    document.querySelectorAll('video[data-preview-time]').forEach((video) => {
+      const previewTime = Number(video.dataset.previewTime);
+      if (!Number.isFinite(previewTime)) return;
+
+      const showPreview = () => {
+        if (video.dataset.previewReady) return;
+        video.dataset.previewReady = 'true';
+        video.currentTime = previewTime;
+      };
+
+      const startFromBeginning = () => {
+        if (video.dataset.started) return;
+        video.dataset.started = 'true';
+        if (Math.abs(video.currentTime - previewTime) < 0.75) {
+          video.currentTime = 0;
+        }
+      };
+
+      video.addEventListener('loadedmetadata', showPreview, { once: true });
+      video.addEventListener('play', startFromBeginning, { once: true });
+
+      if (video.readyState >= 1) showPreview();
+    });
+
+    const lazyVideos = document.querySelectorAll('video');
+    const videoObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const video = entry.target;
+        if (entry.isIntersecting && video.hasAttribute('autoplay')) {
+          video.play().catch(() => {});
+        } else if (!entry.isIntersecting && !video.closest('.video-card')) {
+          video.pause();
+        }
+      });
+    }, { threshold: 0.25 });
+
+    lazyVideos.forEach((video) => videoObserver.observe(video));
+  </script>
+</body>
+</html>
